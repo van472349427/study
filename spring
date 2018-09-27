@@ -10,3 +10,29 @@ IOC容器
     同时为了保证顺序执行，还可以实现Ordered接口
   BeanPostProcessor用来处理实例化后的bean对象，它提供了两个方法postProcessBeforeInitialization和postProcessAfterInitialization，
     用来对实例化前和实例化后的操作
+
+SpringFactoriesLoader详解
+过程：本质上属于Spring框架私有的一种扩展方案，类似于SPI
+  从 CLASSPATH下的每个Jar包中搜寻所有 META-INF/spring.factories配置文件，然后将解析properties文件，找到指定名称的配置后返回；
+  执行 loadFactoryNames(EnableAutoConfiguration.class,classLoader)后，得到对应的一组 @Configuration类，
+  我们就可以通过反射实例化这些类然后注入到IOC容器中
+  
+
+springBoot启动过程
+1.@SpringBootApplication开启组件扫描和自动配置，初始化一个SpringApplication对象、执行该对象的run方法；
+2.通过SpringFactoriesLoader查找并加载所有的 SpringApplicationRunListeners，
+  通过调用starting()方法通知所有的SpringApplicationRunListeners：应用开始启动了。
+3.准备环境，判断是否是web环境；
+4.打印banner
+5.根据是否是web项目，来创建不同的ApplicationContext容器。
+6.创建一系列 FailureAnalyzer，创建流程依然是通过SpringFactoriesLoader获取到所有实现FailureAnalyzer接口的class，然后在创建对应的实例。
+  FailureAnalyzer用于分析故障并提供相关诊断信息。
+7.初始化ApplicationContext，主要完成以下工作：
+  a.将准备好的Environment设置给ApplicationContext
+  b.遍历调用所有的ApplicationContextInitializer的 initialize()方法来对已经创建好的ApplicationContext进行进一步的处理
+  c.调用SpringApplicationRunListener的 contextPrepared()方法，通知所有的监听者：ApplicationContext已经准备完毕
+  d.将所有的bean加载到容器中
+  e.调用SpringApplicationRunListener的 contextLoaded()方法，通知所有的监听者：ApplicationContext已经装载完毕
+8.调用ApplicationContext的 refresh()方法，完成IoC容器可用的最后一道工序
+9.查找当前context中是否注册有CommandLineRunner和ApplicationRunner，如果有则遍历执行它们。
+10.执行所有SpringApplicationRunListener的finished()方法。
