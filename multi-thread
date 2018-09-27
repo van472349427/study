@@ -55,3 +55,11 @@ CAS是借助CPU底层指令来完成的。
 但是如果一个值原来是A，变成了B，又变成了A，那么使用CAS检查的时候会发现它的值没有发生变化，但是实际上却发生了变化！
 解决方案：ABA解决思路是使用版本号，在变量前追加版本号，每次变量更新的时候把版本号加1。
 从JDK1.5开始提供了一个类AtomicStampedReference来解决ABA问题，它通过控制变量值的版本来保证CAS的正確性。
+
+6.CompletableFuture：多功能的非阻塞的Future
+将每个任务的计算完成的结果都用CompletableFuture来表示，利用CompletableFuture.allOf汇聚成一个大的CompletableFuture，
+那么利用get()方法就可以阻塞
+
+7.Fork/Join
+ForkJoinPool中每个线程都有自己的工作队列，并且采用Work-Steal算法防止线程饥饿。 
+Worker线程用LIFO的方法取出任务，但是会用FIFO的方法去偷取别人队列的任务，这样就减少了锁的冲突。
