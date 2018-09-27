@@ -1,2 +1,12 @@
 #this note design by spring study
 
+IOC容器
+1.BeanDefinition用来保存bean对象的所有必要信息，包括bean对象的class类型，是否是抽象类，构造方法和参数等等；
+2.BeanDefinitionRegistry抽象出bean的注册逻辑；主要包括registerBeanDefinition和removeBeanDefinition方法；
+3.BeanFactory抽象出bean的管理逻辑；主要功能有获取bean对象，containBean，getType等管理bean的方法；
+4.ApplicationContext构建在BeanFactory之上，属于高级容器，除了基本的beanFactory的功能外，还有更高级的特性，比如国际化，事件监听机制等。
+5.容器扩展机制：
+  BeanFactoryPostProcessor允许我们在容器实例化某些对象之前，对注册到容器中的bean对象做一些额外的操作，比如修改bean对象的某些属性等；
+    同时为了保证顺序执行，还可以实现Ordered接口
+  BeanPostProcessor用来处理实例化后的bean对象，它提供了两个方法postProcessBeforeInitialization和postProcessAfterInitialization，
+    用来对实例化前和实例化后的操作
