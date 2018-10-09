@@ -2,3 +2,25 @@
 
 参考资料：
 https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247487261&idx=1&sn=d3dd9825515f2f79f5e44def251a8e5c&chksm=eb538a2bdc24033dd8c1ceba703688647fb2d7cdcda9b100fbaf60b65a4114ede7c444d087d6&scene=21#wechat_redirect
+
+1.dubbo都支持什么协议，推荐用哪种？
+  dubbo://（推荐）
+  rmi://
+  hessian://
+  http://
+  webservice://
+  thrift://
+  memcached://
+  redis://
+  rest://
+
+2.Dubbo推荐使用什么序列化框架，你知道的还有哪些？
+  推荐使用Hessian序列化，还有Duddo、FastJson、Java自带序列化。
+  
+3.Dubbo默认使用的是什么通信框架，还有别的选择吗？
+  Dubbo 默认使用 Netty 框架，也是推荐的选择，另外内容还集成有Mina、Grizzly。
+  
+4.Dubbo 服务暴露的过程
+Dubbo 会在 Spring 实例化完 bean 之后，在刷新容器最后一步发布 ContextRefreshEvent 事件的时候，
+通知实现了 ApplicationListener 的 ServiceBean 类进行回调 onApplicationEvent 事件方法，
+Dubbo 会在这个方法中调用 ServiceBean 父类 ServiceConfig 的 export 方法，而该方法真正实现了服务的（异步或者非异步）发布。
